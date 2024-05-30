@@ -39,3 +39,26 @@ env:
   VRA_PASS: '{{ vra_pass }}'
   VRA_USER: '{{ vra_user }}'
 ```
+
+
+## References
+### How to add an image to vSphere Aria
+https://docs.vmware.com/en/VMware-Aria-Automation/SaaS/Using-Automation-Assembler/GUID-9CBAA91A-FAAD-4409-AFFC-ACC1810E4FA5.html#add-an-image-from-a-vcenter-content-library-7
+### Getting Started with vSphere Aria
+https://docs.vmware.com/en/VMware-Aria-Automation/SaaS/Getting-Started-VMware-Aria-Automation.pdf
+### Blog Post About Using REST to interact with vSphere Aria
+https://vra4u.com/2022/01/13/vra-8-request-vm-via-rest-api/
+### Aria Programming Guide
+https://vdc-download.vmware.com/vmwb-repository/dcr-public/4e3fc812-7817-4ad3-92af-766007499000/57daec73-115a-4e1b-ae43-9b2ced09dc9f/Programming-Guide.pdf
+### Ansible URI Module
+https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html
+### Swagger Endpoint on a VRA deployed instance for REST API
+https://vra.connected.dragonslair.dev/automation-ui/api-docs/
+### Containerized AAP Install
+https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.4/html/containerized_ansible_automation_platform_installation_guide/aap-containerized-installation#preparing-the-rhel-host-for-containerized-installation_aap-containerized-installation
+
+### Lab URLs
+#### Red Hat IDM
+https://idm01.connected.dragonslair.dev/
+#### vSphere
+https://vsphere.connected.dragonslair.dev/
