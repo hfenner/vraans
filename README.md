@@ -62,3 +62,5 @@ https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platfor
 https://idm01.connected.dragonslair.dev/
 #### vSphere
 https://vsphere.connected.dragonslair.dev/
+#### AAP
+https://aap.connected.dragonslair.dev:8443/
