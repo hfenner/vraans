@@ -27,9 +27,9 @@ fields:
     label: VRA Password
     secret: true
 required:
-  - instance
-  - username
-  - password
+  - vra_host
+  - vra_user
+  - vra_pass
 ```
 
 ### Injector Config
