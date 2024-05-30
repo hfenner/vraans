@@ -1,0 +1,74 @@
+---
+- hosts: localhost
+  vars:
+   vra_host: "{{ lookup('env', 'VRA_HOST') }}"
+   vra_user: "{{ lookup('env', 'VRA_USER') }}"
+   vra_pass: "{{ lookup('env', 'VRA_PASS') }}"
+
+  tasks:
+  - name: Acquire auth token
+    ansible.builtin.uri:
+      url:  "https://{{ vra_host }}/csp/gateway/am/api/login"
+      method: POST
+      body_format: json
+      body: 
+        username: "{{ vra_user }}"
+        password: "{{ vra_pass }}"
+      validate_certs: no
+      return_content: yes
+    register: token
+   
+  - name: List all items from VRA catalog
+    ansible.builtin.uri:
+      url: "https://{{ vra_host }}/catalog/api/items"
+      method: GET
+      headers:
+        authorization: "Bearer {{ token.json['cspAuthToken'] }}"
+      validate_certs: no
+      return_content: yes
+
+  - name: List all current deployments
+    ansible.builtin.uri:
+      url: "https://{{ vra_host }}/deployment/api/deployments"
+      method: GET
+      headers:
+        authorization: "Bearer {{ token.json['cspAuthToken'] }}"
+      validate_certs: no
+      return_content: yes
+
+  - name: List specific blueprint above for detailed information such as parameters that can be set  
+    ansible.builtin.uri:
+      url: "https://{{ vra_host }}/catalog/api/items/e42dfdf3-b831-3f59-8051-937571b4dd13"
+      method: GET
+      headers:
+        authorization: "Bearer {{ token.json['cspAuthToken'] }}"
+      validate_certs: no
+      return_content: yes
+
+  - name: Deploy a blueprint from above
+    ansible.builtin.uri:
+      url: "https://{{ vra_host }}/catalog/api/items/e42dfdf3-b831-3f59-8051-937571b4dd13/request"
+      method: POST
+      headers:
+        authorization: "Bearer {{ token.json['cspAuthToken'] }}"
+      body_format: json
+      body: 
+        bulkRequestCount: 1
+        deploymentName: "Test_Ansible"
+        #Project ID for deployment
+        projectID: 'a1090181-bb46-48ee-9fee-d53c4143423b'
+        reason: "Test the POST"
+        version: 1
+      validate_certs: no
+      return_content: yes
+    when: create == 'true'
+
+  - name: Delete deployment
+    ansible.builtin.uri:
+      url: "https://{{ vra_host }}/deployment/api/deployments/e7232719-9d1e-47b4-99bb-65f09cef0815"
+      method: DELETE
+      headers:
+        authorization: "Bearer {{ token.json['cspAuthToken'] }}"
+      validate_certs: no
+      return_content: yes
+    when: delete == 'true'
