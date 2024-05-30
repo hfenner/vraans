@@ -5,7 +5,7 @@
    vra_user: "{{ lookup('env', 'VRA_USER') }}"
    vra_pass: "{{ lookup('env', 'VRA_PASS') }}"
    create: false
-   destroy: false
+   delete: false
 
   tasks:
   - name: Acquire auth token
