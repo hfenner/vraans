@@ -32,7 +32,7 @@
     register: deploys
 
   - set_fact:
-      deployment_id: "{{ deploys.json.content | selectattr('name', 'match', deployment_name) | map(attribute='id') | join }}"
+      deployment_id: "{{ deploys.json.content | selectattr('name', 'eq', deployment_name) | map(attribute='id') | join }}"
 
   - debug:
       msg: "{{ deployment_id }}"
