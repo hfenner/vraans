@@ -7,6 +7,7 @@
    create: false
    delete: false
    deployment_name: Test_Ansible
+   catalog_name: 'VM Template'
 
   tasks:
   - name: Acquire auth token
@@ -32,7 +33,7 @@
     register: catalog_items
   
   - set_fact:
-      catalog_id: "{{ catalog_items.json.content }}" 
+      catalog_id: "{{ catalog_items.json.content | selectattr('name', 'match', catalog_name) | map(attribute='id') | join }}" 
         #catalog_id: "{{ deploys.json.content | selectattr('name', 'match', deployment_name) | map(attribute='id') | join }}"
 
   - copy:
