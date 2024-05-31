@@ -1,0 +1,44 @@
+---
+- hosts: localhost
+  vars:
+   vra_host: "{{ lookup('env', 'VRA_HOST') }}"
+   vra_user: "{{ lookup('env', 'VRA_USER') }}"
+   vra_pass: "{{ lookup('env', 'VRA_PASS') }}"
+   create: false
+   delete: false
+   deployment_name: Test_Ansible
+
+  tasks:
+  - name: Acquire auth token
+    ansible.builtin.uri:
+      url:  "https://{{ vra_host }}/csp/gateway/am/api/login"
+      method: POST
+      body_format: json
+      body: 
+        username: "{{ vra_user }}"
+        password: "{{ vra_pass }}"
+      validate_certs: no
+      return_content: yes
+    register: token
+
+  - name: List all items from VRA catalog
+    ansible.builtin.uri:
+      url: "https://{{ vra_host }}/catalog/api/items"
+      method: GET
+      headers:
+        authorization: "Bearer {{ token.json['cspAuthToken'] }}"
+      validate_certs: no
+      return_content: yes
+    register: catalog_items
+  
+  - set_fact:
+      catalog_id: "{{ catalog_items.json.content }}" 
+        #catalog_id: "{{ deploys.json.content | selectattr('name', 'match', deployment_name) | map(attribute='id') | join }}"
+
+  - copy:
+      content: "{{ catalog_id }}" 
+      dest: "{{ playbook_dir }}/output.json"
+
+  - debug:
+      msg: "{{ catalog_id }}"
+
