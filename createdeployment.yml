@@ -34,12 +34,23 @@
   
   - set_fact:
       catalog_id: "{{ catalog_items.json.content | selectattr('name', 'match', catalog_name) | map(attribute='id') | join }}" 
-        #catalog_id: "{{ deploys.json.content | selectattr('name', 'match', deployment_name) | map(attribute='id') | join }}"
+      #This will break if you have the blueprint associated with more than one project
+      project_id: "{{ catalog_items.json.content | selectattr('name', 'match', catalog_name) | map(attribute='projectIds') | flatten | join }}"  
 
-  - copy:
-      content: "{{ catalog_id }}" 
-      dest: "{{ playbook_dir }}/output.json"
-
-  - debug:
-      msg: "{{ catalog_id }}"
+  - name: Deploy a catalog item from above
+    ansible.builtin.uri:
+      url: "https://{{ vra_host }}/catalog/api/items/{{ catalog_id }}/request"
+      method: POST
+      headers:
+        authorization: "Bearer {{ token.json['cspAuthToken'] }}"
+      body_format: json
+      body: 
+        bulkRequestCount: 1
+        deploymentName: "{{ deployment_name }}"
+        #Project ID for deployment
+        projectID: "{{ project_id }}"
+        reason: "Test the POST"
+        version: 1
+      validate_certs: no
+      return_content: yes
 
