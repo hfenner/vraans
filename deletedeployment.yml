@@ -39,10 +39,9 @@
 
   - name: Delete deployment
     ansible.builtin.uri:
-      url: "https://{{ vra_host }}/deployment/api/deployments/e7232719-9d1e-47b4-99bb-65f09cef0815"
+      url: "https://{{ vra_host }}/deployment/api/deployments/{{ deployment_id }}"
       method: DELETE
       headers:
         authorization: "Bearer {{ token.json['cspAuthToken'] }}"
       validate_certs: no
       return_content: yes
-    when: delete == 'true'
