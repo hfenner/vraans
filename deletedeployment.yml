@@ -31,12 +31,11 @@
       return_content: yes
     register: deploys
 
-  - copy: 
-      content: "{{ deploys.json.content | selectattr('name', 'match', deployment_name) | map(attribute='id') | join }}"
-      dest: "{{ playbook_dir }}/output.json"
+  - set_fact:
+      deployment_id: "{{ deploys.json.content | selectattr('name', 'match', deployment_name) | map(attribute='id') | join }}"
 
   - debug:
-      msg: "{{ deploys }}"
+      msg: "{{ deployment_id }}"
 
   - name: Delete deployment
     ansible.builtin.uri:
